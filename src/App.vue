@@ -11,6 +11,7 @@ import HelloWorld from './components/HelloWorld.vue';
 import Todos from './components/Todos.vue';
 import Header from './components/layout/Header.vue';
 import AddTodo from './components/AddTodo.vue';
+import axios from 'axios';
 
 export default {
   name: 'app',
@@ -22,34 +23,29 @@ export default {
   },
   data() {
     return {
-      todos: [
-        {
-          id: 1,
-          title: "First todo",
-          completed: false
-        },
-        {
-          id: 2,
-          title: "Second todo",
-          completed: false
-        },
-        {
-          id: 3,
-          title: "Third todo",
-          completed: false
-        }
-        
-      ]
+      todos: []
     };
   },
 
   methods:{
     deleteTodo(id) {
-      this.todos = this.todos.filter((t) => t.id !== id);
+      axios.delete("https://jsonplaceholder.typicode.com/todos/"+id)
+      .then(res => this.todos = this.todos.filter((t) => t.id !== id))
+      .catch(e => console.log(e));
     },
     addTodo(todo) {
-      this.todos.push(todo);
+      const {title, completed} = todo;
+      axios.post("https://jsonplaceholder.typicode.com/todos", {title, completed})
+      .then(res => this.todos.push(res.data))
+      .catch(e => console.log(e));
     }
+  },
+
+  created() {
+    console.log("created");
+    axios.get("https://jsonplaceholder.typicode.com/todos?_limit=5")
+    .then(res => this.todos = res.data)
+    .catch( e => console.log(e));
   }
 }
 </script>
