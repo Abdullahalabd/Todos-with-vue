@@ -1,1 +1,1 @@
-# chat-app-demo-with-vue
+# Simple todo app made with vue as part of Vue crash course
